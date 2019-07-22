@@ -1,0 +1,98 @@
+{% macro inputs() %}
+    <input type="hidden" class="form-control patient-id" value="" name="patient[id]">
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Patient fullname' | trans() }}</label>
+        </div>
+        <div class="col-sm-7 float-right">
+            <input type="text" class="form-control patient-name" value="" name="patient[name]" required>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Age' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" class="form-control patient-age" value="" name="patient[age]" required>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Date of Birth' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" class="form-control patient-date-of-birth datepicker" autocomplete="off" value="" name="patient[dateOfBirth]" required>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Gender' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <select class="form-control select2-modal patient-gender" name="patient[gender]" required>
+                <option value="{{ 'm' }}"> {{ 'Male' | trans() }} </option>
+                <option value="{{ 'f' }}"> {{ 'Female' | trans() }} </option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Diagnosis' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <textarea class="form-control patient-diagnosis" name="patient[diagnosis]" required></textarea>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Contact number' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input id="phone" type="text" class="form-control patient-phone" value="" placeholder="+7(999) 999-9999" name="patient[phone]" required>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Address of residence' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" class="form-control patient-address" value="" name="patient[address]" required>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Number OMS' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" pattern="\d*" class="form-control patient-number-oms" value="" name="patient[numberOms]" required>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#phone').mask('+7(999) 999-9999');
+
+            moment.locale('ru');
+            $('.datepicker').datepicker({
+                'format': 'dd.mm.yyyy',
+                'autoclose' : true
+            });
+
+            $('.edit-patient').bind('click', function () {
+                var editPatientForm = $('#editPatientForm');
+                editPatientForm.attr('action', $(this).data('href'));
+                editPatientForm.find('.patient-id').val($(this).data('id'));
+                editPatientForm.find('.patient-name').val($(this).data('name'));
+                editPatientForm.find('.patient-age').val($(this).data('age'));
+                editPatientForm.find('.patient-date-of-birth').val($(this).data('dateOfBirth'));
+                editPatientForm.find('.patient-gender').val($(this).data('gender'));
+                editPatientForm.find('.patient-diagnosis').val($(this).data('diagnosis'));
+                editPatientForm.find('.patient-phone').val($(this).data('phone'));
+                editPatientForm.find('.patient-number-oms').val($(this).data('numberOms'));
+                editPatientForm.find('.patient-address').val($(this).data('address'));
+
+                $('#phone').mask('+7(999) 999-9999');
+            });
+        });
+    </script>
+{% endmacro %}

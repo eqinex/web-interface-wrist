@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ patient.name }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="panel"></div>
+        <div class="row col-md-6" style="padding: 0 0;">
+            <div class="form-group no-wrap col-md-6" style="padding: 0 0;">
+                <div class="line-height">
+                    <strong>{{ 'Age' | trans() ~ ': ' }}</strong><span>{{ patient.age ~ ' ' ~ 'years old' | trans() }}</span>
+                </div>
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Date of Birth' | trans() ~ ': ' }}</strong><span>{{ patient.dateOfBirth | date('d-m-Y') }}</span>
+                </div>
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Gender' | trans() ~ ': ' }}</strong><span>{{ patient.gender == 'm' ? 'Male' | trans() : 'Female' | trans() }}</span>
+                </div>
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Diagnosis' | trans() ~ ': ' }}</strong><span>{{ patient.diagnosis }}</span>
+                </div>
+            </div>
+            <div class="form-group no-wrap col-md-6">
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Contact number' | trans() ~ ': ' }}</strong><span>{{ patient.phone }}</span>
+                </div>
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Address of residence' | trans() ~ ': ' }}</strong><span>{{ patient.address }}</span>
+                </div>
+                <div class="no-wrap line-height">
+                    <strong>{{ 'Number OMS' | trans() ~ ': ' }}</strong><span>{{ patient.numberOms }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6" style="padding-right: 0;">
+            <a class="btn btn-primary float-right edit-patient"
+               href=""
+               data-href="{{ path('edit_patient', {'id': patient.id}) }}"
+               data-id="{{ patient.id }}"
+               data-name="{{ patient.name }}"
+               data-age="{{ patient.age }}"
+               data-date-of-birth="{{ patient.dateOfBirth | date('d.m.Y')}}"
+               data-gender="{{ patient.gender }}"
+               data-diagnosis="{{ patient.diagnosis }}"
+               data-phone="{{ patient.phone }}"
+               data-number-oms="{{ patient.numberOms }}"
+               data-address="{{ patient.address }}"
+               data-toggle="modal"
+               data-target=".editPatientModal"
+            ><i class="fas fa-edit"></i> {{ 'Edit' | trans() }}</a>
+        </div>
+    </div>
+
+    <div class="panel"></div>
+    <div class="row justify-content-between">
+        <div class="form-group col-md-6" style="padding-left: 0;">
+            <div class="row" style="padding-right: 0;">
+                <div class="col-md-6">
+                    <h1>{{ 'Procedures' | trans() }}</h1>
+                </div>
+                <div class="col-md-6" style="padding-right: 0;">
+                    <button type="button" class="btn btn-success float-right">{{ 'Start the procedure' | trans() }}</button>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-primary">
+                    <tr>
+                        <th><strong>№</strong></th>
+                        <th><strong>{{ 'Comment' | trans() }}</strong></th>
+                        <th><strong>{{ 'Start At' | trans() }}</strong></th>
+                        <th><strong>{{ 'End At' | trans() }}</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set id = 1 %}
+                {% for procedure in procedures %}
+                    <tr class="tr-select"
+                        data-href="{{ path('patients_details', {'id': patient.id, 'procedure': procedure.id}) }}"
+                    >
+                        <td><span>{{ id }}</span></td>
+                        <td><span>{{ procedure.comment }}</span></td>
+                        <td><span>{{ procedure.startAt | date('d-m-Y H:i') }}</span></td>
+                        <td><span>{{ procedure.endAt | date('d-m-Y H:i') }}</span></td>
+                    </tr>
+                    {% set id = id + 1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if procedure is not null %}
+            <div class="form-group col-md-6" style="padding-right: 0;">
+                <div class="row" style="padding-right: 0;">
+                    <div class="col-md-6">
+                        <h1>{{ 'Medical indicators' | trans() }}</h1>
+                    </div>
+                    <div class="col-md-6" style="padding-right: 0;">
+                        <button type="button"
+                                class="btn btn-primary float-right add-indicator"
+                                data-href="{{ path('add_indicator', {'id': procedure.id}) }}"
+                                data-toggle="modal"
+                                data-target=".addIndicatorModal">{{ 'Add indicator' | trans() }}</button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead class="thead-primary">
+                        <tr>
+                            <th><strong>{{ 'Indicator' | trans() }}</strong></th>
+                            <th><strong>{{ 'Value' | trans() }}</strong></th>
+                            <th><strong></strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for indicator in indicators %}
+                        <tr>
+                            <td><span>{{ indicator.indicator.name }}</span></td>
+                            <td><span>{{ indicator.value }}</span></td>
+                            <td class="text-right">
+                                <a class="btn btn-primary btn-sm btn-size edit-indicator"
+                                   href=""
+                                   data-href="{{ path('edit_indicator', {'id': procedure.id, 'indicatorId': indicator.id}) }}"
+                                   data-id="{{ indicator.id }}"
+                                   data-indicator="{{ indicator.indicator.id }}"
+                                   data-value="{{ indicator.value }}"
+                                   data-toggle="modal"
+                                   data-target=".editIndicatorModal"
+                                ><i class="fas fa-edit"></i></a>
+
+                                <a class="btn btn-danger btn-sm btn-size remove-indicator"
+                                   href=""
+                                   data-href="{{ path('remove_indicator', {'id': procedure.id, 'indicatorId': indicator.id}) }}"
+                                   data-id="{{ indicator.id }}"
+                                   data-toggle="modal"
+                                   data-target=".removeIndicatorModal"
+                                ><i class="fas fa-times"></i></a>
+                            </td>
+                        </tr>
+                        {% set id = id + 1 %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    {% import 'indicators/partial/form.html.twig' as form %}
+    {% import 'indicators/partial/remove_form.html.twig' as removeIndicatorForm %}
+    {% import 'patients/partial/form.html.twig' as editPatientForm %}
+
+    {% set addIndicatorVars = {
+        'class': 'addIndicatorModal',
+        'formId': 'addIndicatorForm',
+        'title': 'New indicator',
+        'content': form.inputs(indicatorNames, procedure),
+        'submitTitle': 'Create'
+    } %}
+
+    {% set editIndicatorVars = {
+        'class': 'editIndicatorModal',
+        'formId': 'editIndicatorForm',
+        'title': 'Edit indicator',
+        'content': form.inputs(indicatorNames, procedure),
+        'submitTitle': 'Edit'
+    } %}
+
+    {% set removeIndicatorVars = {
+        'class': 'removeIndicatorModal',
+        'formId': 'removeIndicatorForm',
+        'title': 'Remove indicator',
+        'content': removeIndicatorForm.inputs(),
+        'submitTitle': 'Remove'
+    }
+    %}
+
+    {% set editPatientVars = {
+        'class': 'editPatientModal',
+        'formId': 'editPatientForm',
+        'title': 'Edit patient card',
+        'content': editPatientForm.inputs(),
+        'submitTitle': 'Edit'
+    } %}
+
+    {% include 'partial/modal.html.twig' with addIndicatorVars %}
+    {% include 'partial/modal.html.twig' with editIndicatorVars %}
+    {% include 'partial/modal.html.twig' with removeIndicatorVars %}
+    {% include 'partial/modal.html.twig' with editPatientVars %}
+
+    <script>
+        $(document).ready(function () {
+            $('.tr-select').on('click', function() {
+                document.location = $(this).data('href');
+            });
+        });
+    </script>
+
+{% endblock %}

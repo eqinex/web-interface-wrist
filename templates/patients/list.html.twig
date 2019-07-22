@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Patients' | trans() }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="panel">
+            <button  type="button" class="btn btn-primary float-right" data-toggle="modal" data-target=".addPatientModal"><i class="fa small fa-plus"></i> {{ 'Add' | trans() }}</button>
+            <form class="form-inline filter-form" method="get" action="{{ path('homepage') }}">
+                <div class="form-group filter">
+                    <select class="form-control" name="filters[name]">
+                        <option value="">{{ 'Patient fullname' | trans() }}</option>
+                        {% for patient in patientFilter %}
+                            <option {% if filters.name is defined and filters.name == patient.name %}selected{% endif %} value="{{ patient.name }}">
+                                {{ patient.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group filter">
+                    <select class="form-control" name="filters[age]">
+                        <option value="">{{ 'Age' | trans() }}</option>
+                        <option {% if filters.age is defined and filters.age == '1-20' %}selected{% endif %} value="1-20">1-20</option>
+                        <option {% if filters.age is defined and filters.age == '21-40' %}selected{% endif %} value="21-40">21-40</option>
+                        <option {% if filters.age is defined and filters.age == '41-60' %}selected{% endif %} value="41-60">41-60</option>
+                        <option {% if filters.age is defined and filters.age == '61-100' %}selected{% endif %} value="61-100">61-100</option>
+                    </select>
+                </div>
+                <div class="form-group filter">
+                    <select class="form-control" name="filters[dateOfBirth]">
+                        <option value="">{{ 'Date of Birth' | trans() }}</option>
+                        {% for year in startYear | date('Y').."now" | date('Y') %}
+                            <option {% if filters.dateOfBirth is defined and filters.dateOfBirth == year %}selected{% endif %} value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group filter">
+                    <select class="form-control" name="filters[gender]">
+                        <option value="">{{ 'Gender' | trans() }}</option>
+                        <option {% if filters.gender is defined and filters.gender == 'm' %}selected{% endif %} value="m">{{ 'Male' | trans() }}</option>
+                        <option {% if filters.gender is defined and filters.gender == 'f' %}selected{% endif %} value="f">{{ 'Female' | trans() }}</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead class="thead-primary">
+                <tr>
+                    <th class="text-capitalize"><strong>№</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Patient fullname' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Age' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Date of Birth' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Gender' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Diagnosis' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Phone' | trans() }}</strong></th>
+                    <th class="text-capitalize"><strong>{{ 'Number OMS' | trans() }}</strong></th>
+                    <th class="text-capitalize text-center column-100-px"><strong>{{ 'Action' | trans() }}</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for patient in patients %}
+                <tr>
+                    <td><span>{{ patient.id }}</span></td>
+                    <td><span>{{ patient.name }}</span></td>
+                    <td><span>{{ patient.age }}</span></td>
+                    <td><span>{{ patient.dateOfBirth | date('d.m.Y') }}</span></td>
+                    <td><span>{{ patient.gender | trans() }}</span></td>
+                    <td><span>{{ patient.diagnosis }}</span></td>
+                    <td><span>{{ patient.phone }}</span></td>
+                    <td><span>{{ patient.numberOms }}</span></td>
+                    <td class="text-center">
+                        <a class="btn btn-primary btn-sm edit-patient"
+                           href=""
+                           data-href="{{ path('edit_patient', {'id': patient.id}) }}"
+                           data-id="{{ patient.id }}"
+                           data-name="{{ patient.name }}"
+                           data-age="{{ patient.age }}"
+                           data-date-of-birth="{{ patient.dateOfBirth | date('d.m.Y')}}"
+                           data-gender="{{ patient.gender }}"
+                           data-diagnosis="{{ patient.diagnosis }}"
+                           data-phone="{{ patient.phone }}"
+                           data-number-oms="{{ patient.numberOms }}"
+                           data-address="{{ patient.address }}"
+                           data-toggle="modal"
+                           data-target=".editPatientModal"
+                        ><i class="fas fa-edit"></i></a>
+
+                        <a class="btn btn-primary btn-sm" href="{{ path('patients_details', {'id': patient.id}) }}"><i class="fas fa-eye"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% set vars = {
+        'route': 'homepage',
+        'filters': filters,
+        'currentPage': currentPage,
+        'maxPages': maxPages,
+    }
+    %}
+
+    {% include 'partial/paginator.html.twig' with vars %}
+
+    {% import 'patients/partial/form.html.twig' as form %}
+
+    {% set addPatientVars = {
+        'class': 'addPatientModal',
+        'formId': 'addPatientForm',
+        'title': 'New patient card',
+        'content': form.inputs(),
+        'formAction': path('add_patient'),
+        'submitTitle': 'Add'
+    } %}
+
+    {% set editPatientVars = {
+        'class': 'editPatientModal',
+        'formId': 'editPatientForm',
+        'title': 'Edit patient card',
+        'content': form.inputs(),
+        'submitTitle': 'Edit'
+    } %}
+
+    {% include 'partial/modal.html.twig' with addPatientVars %}
+    {% include 'partial/modal.html.twig' with editPatientVars %}
+
+{% endblock %}

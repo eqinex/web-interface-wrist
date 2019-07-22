@@ -1,0 +1,48 @@
+{% macro inputs(indicatorNames, procedure) %}
+    <input type="hidden" class="form-control indicator-id" value="" name="indicator[id]">
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Name' | trans() }}</label>
+        </div>
+        <div class="col-sm-7 float-right">
+            <select class="form-control select2-modal indicator-indicator" name="indicator[indicator]" required>
+                <option value="">{{ 'Select indicator' | trans() }}</option>
+                {% for indicator in indicatorNames %}
+                    <option value="{{ indicator.id }}"
+                            {% if procedure.indicator.id is defined and procedure.indicator.id == indicator.id %}
+                                {{ "selected" }}
+                            {% endif %}>{{ indicator.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-5">
+            <label class="control-label">{{ 'Value' | trans() }}</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" pattern="\d+(\.\d{0,10})?" class="form-control indicator-value" value="" name="indicator[value]" required>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.add-indicator').bind('click', function () {
+                var addIndicatorForm = $('#addIndicatorForm');
+                addIndicatorForm.attr('action', $(this).data('href'));
+            });
+
+            $('.edit-indicator').bind('click', function () {
+                var editIndicatorForm = $('#editIndicatorForm');
+                editIndicatorForm.attr('action', $(this).data('href'));
+                editIndicatorForm.find('.indicator-id').val($(this).data('id'));
+                editIndicatorForm.find('.indicator-indicator').val($(this).data('indicator'));
+                editIndicatorForm.find('.indicator-value').val($(this).data('value'));
+
+                $('.select2-modal').select2({ width: '100%' });
+            });
+
+            $('.select2-modal').select2({ width: '100%' });
+        });
+    </script>
+{% endmacro %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ block('title') | capitalize }}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/fontawesome-all.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <div class="wrapper">
+            <div class="container-fluid sidebar">
+                <ul class="nav nav-pills flex-column" id="side-menu">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link {{ app.request.attributes.get('_route') == 'homepage' or app.request.attributes.get('_route') == 'patients_details' ? 'active' : '' }}">
+                            <img src="{{ asset('images/patients.png') }}" alt="models">
+                            <span>{{ 'Patients' | trans() }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('procedures_list') }}" class="nav-link {{ app.request.attributes.get('_route') == 'procedures_list' ? 'active' : '' }}">
+                            <img src="{{ asset('images/history.png') }}" alt="models">
+                            <span>{{ 'History of procedures' | trans() }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('configuration_procedure') }}" class="nav-link {{ app.request.attributes.get('_route') == 'configuration_procedure' ? 'active' : '' }}">
+                            <img src="{{ asset('images/settings.png') }}" alt="models">
+                            <span>{{ 'Procedure setting' | trans() }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="container-fluid">
+                <div class="content main-row">
+                    <div class="row">
+                        <div class="col-lg-6 page-wrapper">
+                            <h1>{% block title %}{% endblock %}</h1>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="logout-wrapper float-right">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="dropdown_user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{{ app.user.email }} <i class="fas fa-sm fa-chevron-down"></i></a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdown_user">
+                                            <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt fa-fw"></i> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+                                        </div>
+                                    </li>
+                                {% else %}
+
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block javascripts %}
+            <script src="{{ asset('js/popper.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/select2.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.maskedinput.min.js') }}"></script>
+            <script src="{{ asset('js/moment-with-locales.js') }}"></script>
+            <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('js/daterangepicker.js') }}"></script>
+            <script>
+                $(document).ready(function() {
+                    $('.filter').change(function () {
+                        $('.filter-form').submit();
+                    });
+                    moment.locale('ru');
+                });
+            </script>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,53 @@
+Add: Добавить
+Create: Создать
+Close: Закрыть
+Edit: Редактировать
+Save: Сохранить
+Reset: Сбросить
+Remove: Удалить
+Action: Действия
+previous: назад
+next: далее
+Name: Название
+
+Patients: Пациенты
+Patient fullname: ФИО
+Age: Возраст
+Date of Birth: Дата рождения
+Gender: Пол
+m: М
+f: Ж
+Male: Мужской
+Female: Женский
+Diagnosis: Диагноз
+Phone: Телефон
+Contact number: Контактный телефон
+Number OMS: Номер ОМС
+Address of residence: Адрес проживания
+New patient card: Карточка нового пациента
+Edit patient card: Редактировать карточку пациента
+years old: лет
+
+History of procedures: История процедур
+Comment: Комментарий
+Start At: Дата начала
+End At: Дата завершения
+The date of the: Дата проведения
+Procedures: Процедуры
+Start the procedure: Начать процедуру
+
+Medical indicators: Мед. показатели
+Add indicator: Добавить показатель
+Indicator: Показатель
+Value: Значение
+Select indicator: Выберите показатель
+New indicator: Новый показатель
+Edit indicator: Редактировать показатель
+Remove indicator: Удалить показатель
+Are you sure you want to delete indicator?: Вы уверены, что хотите удалить показатель?
+
+Procedure setting: Настройка процедуры
+Procedure: Процедура
+Electric drive speed: Скорость работы электропривода, об./мин
+The range of rotation angle: Диапазон угла поворота исполнительного механизма, град.
+Sensor parametr: Параметр усилия датчика

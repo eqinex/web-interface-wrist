@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Procedure' | trans() }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <form action="{{ path("save_configuration") }}" class="col-md-6" method="post" style="padding-left: 0;">
+            <div class="panel">
+                <button type="submit" class="btn btn-success btn-lg slider" name="action" value="save"><i class="fa fa-play"></i> {{ 'Save' | trans() }}</button>
+                <button type="submit" class="btn btn-danger btn-lg" name="action" value="reset"><i class="fa fa-stop"></i> {{ 'Reset' | trans() }}</button>
+            </div>
+            <div class="panel">
+                <span>{{ 'Electric drive speed' | trans() ~ ':' }}</span>
+                <div class="row align-items-center" style="padding-left: 0;">
+                    <span class="col-md-1 text-center">0</span>
+                    <input type="range" min="0" max="50" name="configuration[{{ speed.key }}]" class="form-control col-md-8 slider" value="{{ speed.value }}">
+                    <output class="slider-result col-md-1 text-center" for="configuration[{{ speed.key }}]">{{ speed.value }}</output>
+                </div>
+            </div>
+            <div class="panel">
+                <span>{{ 'The range of rotation angle' | trans() ~ ':' }}</span>
+                <div class="row align-items-center" style="padding-left: 0;">
+                    <span class="col-md-1 text-center">0</span>
+                    <input type="range" min="0" max="180" name="configuration[{{ angle.key }}]" class="form-control col-md-8 slider" value="{{ angle.value }}">
+                    <output class="slider-result col-md-1 text-center" for="configuration[{{ angle.key }}]">{{ angle.value }}</output>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="row align-items-center" style="padding-left: 0;">
+                    <span class="col-md-4" style="padding-left: 0;">{{ 'Sensor parametr' | trans() ~ ' 1:' }}</span>
+
+                    <div class="col-md-2 align-items-center">
+                        <input type="text" name="configuration[{{ sensorParametr1.key }}]" class="form-control" value="{{ sensorParametr1.value }}">
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="row align-items-center" style="padding-left: 0;">
+                    <span class="col-md-4" style="padding-left: 0;">{{ 'Sensor parametr' | trans() ~ ' 2:' }}</span>
+
+                    <div class="col-md-2 align-items-center">
+                        <input type="text" name="configuration[{{ sensorParametr2.key }}]" class="form-control" value="{{ sensorParametr2.value }}">
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="row align-items-center" style="padding-left: 0;">
+                    <span class="col-md-4" style="padding-left: 0;">{{ 'Sensor parametr' | trans() ~ ' 3:' }}</span>
+
+                    <div class="col-md-2 align-items-center">
+                        <input type="text" name="configuration[{{ sensorParametr3.key }}]" class="form-control" value="{{ sensorParametr3.value }}">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('.slider').change(function() {
+                $(this)
+                    .next('.slider-result')
+                    .text($(this).val());
+            })
+                .trigger('change');
+        });
+    </script>
+{% endblock %}

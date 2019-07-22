@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'History of procedures' | trans() }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="panel">
+            <form class="form-inline filter-form" method="get" action="{{ path('procedures_list') }}">
+                <div class="form-group filter">
+                    <select class="form-control" name="filters[name]">
+                        <option value="">{{ 'Patient fullname' | trans() }}</option>
+                        {% for patient in patients %}
+                            <option {% if filters.name is defined and filters.name == patient.name %}selected{% endif %} value="{{ patient.name }}">
+                                {{ patient.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group filter">
+                    <input type="text" required class="form-control daterange-picker"
+                           name="filters[startAt]" placeholder="{{ 'The date of the' | trans() }}"
+                           value="{% if filters.startAt is defined %}{{ filters.startAt }}{% endif %}">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead class="thead-primary">
+            <tr>
+                <th class="text-capitalize"><strong>№</strong></th>
+                <th class="text-capitalize"><strong>{{ 'Patient fullname' | trans() }}</strong></th>
+                <th class="text-capitalize"><strong>{{ 'Number OMS' | trans() }}</strong></th>
+                <th class="text-capitalize"><strong>{{ 'Comment' | trans() }}</strong></th>
+                <th class="text-capitalize"><strong>{{ 'Start At' | trans() }}</strong></th>
+                <th class="text-capitalize"><strong>{{ 'End At' | trans() }}</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for procedure in procedures %}
+                <tr>
+                    <td><span>{{ procedure.id }}</span></td>
+                    <td><span>{{ procedure.patient.name }}</span></td>
+                    <td><span>{{ procedure.patient.numberOms }}</span></td>
+                    <td><span>{{ procedure.comment }}</span></td>
+                    <td><span>{{ procedure.startAt | date('d.m.Y H:i') }}</span></td>
+                    <td><span>{{ procedure.endAt | date('d.m.Y H:i') }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% set vars = {
+        'route': 'procedures_list',
+        'filters': filters,
+        'currentPage': currentPage,
+        'maxPages': maxPages,
+    }
+    %}
+
+    {% include 'partial/paginator.html.twig' with vars %}
+
+    <script>
+        $(document).ready(function() {
+            moment.locale('ru');
+            $('.daterange-picker').daterangepicker({
+                timePickerIncrement: 30,
+                timePicker24Hour: true,
+                autoUpdateInput: false,
+                locale: {
+                    format: 'DD.MM.YYYY', applyLabel: "Выбрать", cancelLabel: "Отменить"
+                }
+            });
+
+            $('.daterange-picker').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD.MM.YYYY') + ' - ' + picker.endDate.format('DD.MM.YYYY'));
+
+                $(this).trigger('change');
+            });
+
+            $('.daterange-picker').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                $(this).trigger('change');
+            });
+        });
+    </script>
+
+{% endblock %}
